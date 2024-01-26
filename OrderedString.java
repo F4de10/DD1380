@@ -25,4 +25,3 @@ public class OrderedString {
     System.out.println(maxLength);
   }
 }
-

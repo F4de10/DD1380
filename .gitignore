@@ -346,3 +346,4 @@ Thumbs.db
 *.xml
 *.iml
 .idea/.gitignore
+.vscode/settings.json
