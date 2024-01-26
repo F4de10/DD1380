@@ -9,20 +9,20 @@ public class OrderedString {
     int currentLength = 1;
 
     for (int i = 1; i < s.length(); i++) {
-      if (s.charAt(i) >= s.charAt(i - 1)) {
+      if (s.charAt(i) > s.charAt(i - 1)) {
         currentLength++;
       } else {
         if (currentLength > maxLength) {
           maxLength = currentLength;
         }
-        currentLength = 1;
+        if (s.charAt(i) <= s.charAt(i - 1)) {
+          currentLength = 1;
+        }
       }
     }
 
-    if (currentLength > maxLength) {
-      maxLength = currentLength;
-    }
-
-    System.out.println("Length of the longest sorted substring: " + maxLength);
+    sc.close();
+    System.out.println(maxLength);
   }
 }
+
