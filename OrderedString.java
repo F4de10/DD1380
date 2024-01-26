@@ -10,18 +10,21 @@ public class OrderedString {
 		int currentLength = 1;
 		String order = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
+		// Create a lookup table
+		int[] lookup = new int[128];
+		for (int i = 0; i < order.length(); i++) {
+			lookup[order.charAt(i)] = i;
+		}
+
 		for (int i = 1; i < s.length(); i++) {
-			if (Character.isWhitespace(s.charAt(i))) {
-				currentLength = 0;
-				continue;
-			}
-			if (order.indexOf(s.charAt(i)) > order.indexOf(s.charAt(i - 1))) {
+			if (lookup[s.charAt(i)] < lookup[s.charAt(i - 1)]) {
+				currentLength = 1;
+
+			} else {
 				currentLength++;
 				if (currentLength > maxLength) {
 					maxLength = currentLength;
 				}
-			} else {
-				currentLength = 1;
 			}
 		}
 		sc.close();
