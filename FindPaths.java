@@ -2,14 +2,7 @@ import java.util.*;
 
 public class FindPaths {
     public static void main(String[] args) {
-        Scanner sc = new Scanner("6 6\n" + //
-                "AACACD\n" + //
-                "ABBABD\n" + //
-                "ABAAAD\n" + //
-                "ABABAD\n" + //
-                "AAABAD\n" + //
-                "BBBBBD\n" + //
-                "");
+        Scanner sc = new Scanner(System.in);
         int M = sc.nextInt();
         int N = sc.nextInt();
         sc.nextLine(); // Consume the newline after reading N
@@ -25,46 +18,44 @@ public class FindPaths {
     }
 
     public static String findPaths(char[][] matrix) {
-        int M = matrix.length;
+        Set<Character> result = new TreeSet<>(); // Använd TreeSet för att automatiskt sortera bokstäverna
         int N = matrix[0].length;
-        boolean[][] visited = new boolean[M][N];
-        Set<Character> result = new HashSet<>();
 
-        for (int i = 0; i < M; i++)
-            for (int j = 0; j < N; j++)
-                if (!visited[i][j]) {
-                    dfs(i, j, visited, matrix, result);
-                }
-
-        if (result.isEmpty()) {
-            return "0";
+        // Loop genom översta raden
+        for (int j = 0; j < N; j++) {
+            char targetLetter = matrix[0][j];
+            if (dfs(0, j, matrix, result, targetLetter)) {
+                return Character.toString(targetLetter);
+            }
         }
-
-        // Convert set to sorted array and then to a string
-        Character[] resultArray = result.toArray(new Character[0]);
-        char[] resultChars = new char[resultArray.length];
-        for (int i = 0; i < resultArray.length; i++) {
-            resultChars[i] = resultArray[i];
-        }
-
-        return new String(resultChars);
+        return "0";
     }
 
     // dfs method (depth first search)
-    private static void dfs(int i, int j, boolean[][] visited, char[][] matrix, Set<Character> result) {
-        if (i < 0 || i >= matrix.length || j < 0 || j >= matrix[0].length || visited[i][j]) {
-            return; // Out of bounds or already visited or empty cell
+    private static boolean dfs(int i, int j, char[][] matrix, Set<Character> result, char targetLetter) {
+
+        int N = matrix[0].length;
+        int M = matrix.length;
+
+        // If we are outside the matrix or the cell does not contain the target letter,
+        // return false
+        if (i < 0 || i >= M || j < 0 || j >= N || matrix[i][j] != targetLetter) {
+            return false;
         }
 
-        visited[i][j] = true;
-        if (i == 0 || i == matrix.length - 1) {
-            result.add(matrix[i][j]);
+        // Om vi är på nedersta raden, returnera true
+        if (i == M - 1) {
+            return true;
         }
+        char temp = matrix[i][j];
+        matrix[i][j] = '.'; // Markera att vi har besökt denna ruta
 
-        int[][] directions = { { 1, 0 }, { -1, 0 } };
-        for (int[] dir : directions) {
-            dfs(i + dir[0], j + dir[1], visited, matrix, result);
-        }
+        // Utforska grannrutorna (ner, vänster, höger)
+        boolean found = (dfs(i + 1, j, matrix, result, targetLetter) || dfs(i, j - 1, matrix, result, targetLetter)
+                || dfs(i, j + 1, matrix, result, targetLetter));
 
+        matrix[i][j] = temp; // Återställ rutan
+
+        return found;
     }
 }
